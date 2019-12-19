@@ -1,0 +1,56 @@
+---
+title: "Dominance Analysis of Correlations"
+author: "Cort W. Rudolph"
+date: "12/19/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Install & Load Packages
+```{r}
+# install.packages(dominanceanalysis)
+library(dominanceanalysis)
+```
+
+## Basic dominance analysis from correlations
+
+## Read in correlation data
+- Data from Kleine, Rudolph, & Zacher (2019, Table 7): https://onlinelibrary.wiley.com/doi/full/10.1002/job.2375
+
+```{r}
+dat<-matrix(c(
+ 1.00, 0.41, 0.16, 0.37,-0.36, 0.27, 0.45,
+ 0.41, 1.00, 0.18, 0.46,-0.41, 0.24, 0.58,
+ 0.16, 0.18, 1.00, 0.36,-0.15, 0.12, 0.29,
+ 0.37, 0.46, 0.36, 1.00,-0.38, 0.17, 0.55,
+-0.36,-0.41,-0.15,-0.38, 1.00,-0.29,-0.47,
+ 0.27, 0.24, 0.12, 0.17,-0.29, 1.00, 0.35,
+ 0.45, 0.58, 0.29, 0.55,-0.47, 0.35, 1.00), nrow = 7, ncol = 7)
+
+row.names(dat)<-colnames(dat)<-c("PosAff",
+                                 "JobSatis",
+                                 "Taskperf",
+                                 "WorkEng",
+                                 "Burn",
+                                 "SubjHeal",
+                                 "Thriv")
+```
+
+## Reproduce `Model 1` 
+*n.b.* There are slight differences in coefficients, due to rounding.
+
+```{r}
+lwith<-lmWithCov(Taskperf~PosAff+WorkEng+Thriv, dat)
+coeficients <- lwith$coef
+lwith$r.squared
+
+dom.weights.raw<-dominanceAnalysis(lwith)$contribution.average$r2
+
+dom.weights.pct<-((dominanceAnalysis(lwith)$contribution.average$r2)/lwith$r.squared)*100
+
+cbind(coeficients, dom.weights.raw,dom.weights.pct)
+```
+
