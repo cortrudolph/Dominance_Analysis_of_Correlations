@@ -1,0 +1,5 @@
+Var_Names,Taskperf,PosAff,WorkEng,Thriv
+Taskperf,1,0.16,0.36,0.29
+PosAff,0.16,1,0.37,0.45
+WorkEng,0.36,0.37,1,0.55
+Thriv,0.29,0.45,0.55,1
